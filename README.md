@@ -1,79 +1,197 @@
-DM Cloud Infrastructure PoC - Deployment Guide
-Welcome to the DM Cloud Infrastructure Proof of Concept (PoC)! This repository provides an automated, lightweight web application setup using modern Infrastructure as Code (IaC) and containerization tools.
+# DM Cloud Infrastructure PoC
 
-This guide is designed for everyone, even if you have no prior technical or software engineering experience. Follow the step by step instructions below to launch the entire environment on your computer in just a few minutes.
+A lightweight infrastructure-as-code proof of concept for deploying a simple web application locally using Docker and Terraform.
 
-What Does This Project Do?
-Instead of manually installing, configuring, and running web server software on your computer, this project uses three smart tools working together:
+This project demonstrates how to provision and run a static web app in a container using:
 
-1: Git / GitHub: Downloads the exact "recipe" (source code) for this project onto your computer.
+- Git and GitHub for source control
+- Docker for containerization
+- Terraform for infrastructure automation
 
-2: Docker: Runs the web server inside an isolated, lightweight digital container. This ensures the application runs consistently on any computer without messing up your personal files or settings.
+It is designed as a simple local demo environment and is intended to be easy to run for beginners.
 
-3: Terraform: Acts as the automated manager. With one simple command, Terraform reads the recipe, talks to Docker, downloads the necessary components, and launches the web application automatically.
+## What This Project Does
 
-System Requirements
-Before starting, ensure your computer has the following tools installed and running:
-Windows 10/11 with WSL2 (Windows Subsystem for Linux)
-Docker Desktop (Make sure Docker Desktop is opened and running in your taskbar)
-Git Bash (or any standard Linux terminal)
-Terraform (installed on your system PATH)
+Instead of manually installing and configuring a web server on your machine, this repository automates the setup for you. Terraform reads the project configuration, provisions the required Docker resources, and launches a lightweight Nginx container that serves the website files from the project.
 
+In short:
 
-Step-by-Step Deployment Guide
-Follow these steps in order.
+- Git clones the project
+- Docker runs the container
+- Terraform automates the deployment
 
-Step 1: Open Your Terminal
-1: Press the Windows Key on your keyboard.
-2: Type Git Bash in the search bar.
-3: Click on Git Bash to open a command window
+---
 
-Step 2: Download (Clone) the Repository
-Copy and paste the following command into your Git Bash window, then press Enter:
-- # Downloads the project files from GitHub to your local machine
+## Prerequisites
+
+Before starting, make sure the following are installed and running on your machine:
+
+- Windows 10 or Windows 11 with WSL2 enabled
+- Docker Desktop installed and running
+- Git Bash (or any compatible Linux-style terminal)
+- Terraform installed and available in your PATH
+
+> Note: This project is intended for local use and demonstration purposes.
+
+---
+
+## Quick Start
+
+Clone the repository:
+
+```bash
 git clone https://github.com/mariocoxen/dm-cloud-infrastructure-poc.git
-
-Step 3: Navigate into the Project Folder
-Move into the newly downloaded project directory:
-- # Changes your terminal's active location to the project directory
 cd dm-cloud-infrastructure-poc
+```
 
-Step 4: Initialize Terraform
-Initialize Terraform to download the necessary Docker integration tools (providers) required to build the setup:
-- # Prepares Terraform and downloads required automation plugins
+Initialize Terraform:
+
+```bash
 terraform init
-(Expected Output: You should see a green success message stating "Terraform has been successfully initialized!")
+```
 
-Step 5: Launch the Infrastructure
-Run the following command to deploy the containerized web application:
-- # Builds and starts the web server container automatically
+Deploy the infrastructure:
+
+```bash
 terraform apply -auto-approve
+```
 
-What happens behind the scenes:
-Terraform contacts Docker.
-Docker pulls a lightweight Linux web server (Nginx).
-Terraform maps your computer's port 8080 to the web server.
-Terraform attaches the custom webpage files (/src) to the live container.
+Open the app in your browser:
 
-
-Step 6: View the Web Application
-1: Open your preferred web browser (Chrome, Edge, Brave, Firefox, etc.).
-2: In the address bar at the top, type:
+```text
 http://localhost:8080
-3:Press Enter.
+```
 
-Stopping or Destroying the Infrastructure:
-When you are finished demonstrating or testing the application, you can safely remove all created container resources with a single command without leaving any background files behind.
-1: Open your terminal in the project folder using:
+---
+
+## Step-by-Step Deployment Guide
+
+### 1. Open a Terminal
+
+Open Git Bash or your preferred terminal application.
+
+### 2. Clone the Repository
+
+Run:
+
+```bash
+git clone https://github.com/mariocoxen/dm-cloud-infrastructure-poc.git
+```
+
+This downloads the project files onto your local machine.
+
+### 3. Navigate to the Project Folder
+
+```bash
 cd dm-cloud-infrastructure-poc
+```
 
-2: Run the destroy command:
-# Safely stops and deletes the running Docker container
+### 4. Initialize Terraform
+
+Run:
+
+```bash
+terraform init
+```
+
+This downloads the required Terraform providers and prepares the project for deployment.
+
+### 5. Deploy the Infrastructure
+
+Run:
+
+```bash
+terraform apply -auto-approve
+```
+
+Terraform will:
+
+- connect to Docker
+- pull the Nginx container image
+- create the necessary resources
+- map port 8080 from your machine to the container
+- serve the contents of the project’s web files
+
+### 6. Open the Website
+
+In your browser, go to:
+
+```text
+http://localhost:8080
+```
+
+You should see the deployed web page.
+
+---
+
+## What Happens Behind the Scenes
+
+This project uses:
+
+- Terraform to define and apply infrastructure changes
+- Docker to run the containerized application
+- Nginx as the web server
+- Local port mapping so the app is accessible at port 8080
+
+The website files are served from the project’s source directory and mounted into the running container.
+
+---
+
+## Stop and Remove the Infrastructure
+
+When you are done testing or demonstrating the project, you can destroy the environment:
+
+```bash
 terraform destroy -auto-approve
+```
 
-**Summary of Useful Commands**
-Action == Terminal Command
-Navigate to project folder == cd dm-cloud-infrastructure-poc
-Start / Deploy server == terraform apply -auto-approve
-Stop / Clean up server == terraform destroy -auto-approve
-Access application in browser == http://localhost:8080
+This removes the provisioned resources and cleans up the local infrastructure created by Terraform.
+
+---
+
+## Useful Commands
+
+| Action | Command |
+| --- | --- |
+| Go to the project folder | `cd dm-cloud-infrastructure-poc` |
+| Initialize Terraform | `terraform init` |
+| Deploy app | `terraform apply -auto-approve` |
+| Remove app and resources | `terraform destroy -auto-approve` |
+| Open app in browser | `http://localhost:8080` |
+
+---
+
+## Troubleshooting
+
+### Docker Desktop is not running
+
+Make sure Docker Desktop is installed and started before running Terraform commands.
+
+### Terraform is not recognized
+
+Ensure Terraform is installed and added to your system PATH.
+
+### Port 8080 is already in use
+
+Another process may already be using port 8080. Stop that service or adjust the port mapping in the configuration.
+
+### App does not load in browser
+
+Check that:
+
+- Docker Desktop is running
+- Terraform apply completed successfully
+- The container is still running
+- No port conflicts are preventing access
+
+---
+
+## Summary
+
+This repository provides a simple, beginner-friendly example of infrastructure automation using Terraform and Docker. It is ideal for local testing, demonstrations, and learning the basics of containerized application deployment.
+
+---
+
+## License
+
+This project is provided for educational and demonstration purposes.
